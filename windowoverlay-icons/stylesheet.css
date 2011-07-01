@@ -1,3 +1,11 @@
+.windowoverlay-application-icon-box {
+    width: 40px;
+    height: 40px;
+    background: rgba(0,0,0,0.8);
+    border: 1px solid rgba(128,128,128,0.40);
+    border-radius: 10px;
+}
+
 .windowoverlay-application-icon {
     width: 32px;
     height: 32px;

@@ -26,7 +26,7 @@ function main() {
         let tracker = Shell.WindowTracker.get_default();
         let apps = tracker.get_running_apps('');
         
-        this._applicationIconBox = new St.BoxLayout({ style_class: 'windowoverlay-application-icon' });
+        this._applicationIconBox = new St.Bin({ style_class: 'windowoverlay-application-icon-box' });
         
         let icon = null;
         for (let i = 0; i < apps.length; i++) {
@@ -34,6 +34,7 @@ function main() {
             for (let j = 0; j < windows.length; j++) {
                 if (windows[j] == windowClone.metaWindow) {
                     icon = apps[i].create_icon_texture(WINDOWOVERLAY_ICON_SIZE);
+                    icon.style_class = 'windowoverlay-application-icon';
                 }
             }
         }
