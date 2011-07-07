@@ -23,17 +23,21 @@ function injectToFunction(parent, name, func) {
 function main() {
 
     injectToFunction(Workspace.WindowOverlay.prototype, '_init', function(windowClone, parentActor) {
+        let icon = null;
+        
         let tracker = Shell.WindowTracker.get_default();
         let app = tracker.get_window_app(windowClone.metaWindow);
-        let icon = app.create_icon_texture(WINDOWOVERLAY_ICON_SIZE)
-        icon.style_class = 'windowoverlay-application-icon';
-
-        if (icon === undefined) {
+        
+        if (app) {
+            icon = app.create_icon_texture(WINDOWOVERLAY_ICON_SIZE);
+        }
+        if (!icon) {
             icon = new St.Icon({ icon_name: 'applications-other',
                                  icon_type: St.IconType.FULLCOLOR,
-                                 icon_size: WINDOWOVERLAY_ICON_SIZE,
-                                 style_class: 'windowoverlay-application-icon' });
+                                 icon_size: WINDOWOVERLAY_ICON_SIZE });
         }
+        icon.width = WINDOWOVERLAY_ICON_SIZE;
+        icon.height = WINDOWOVERLAY_ICON_SIZE;
         
         this._applicationIconBox = new St.Bin({ style_class: 'windowoverlay-application-icon-box' });
         this._applicationIconBox.set_opacity(200);
