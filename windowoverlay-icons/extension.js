@@ -24,20 +24,10 @@ function main() {
 
     injectToFunction(Workspace.WindowOverlay.prototype, '_init', function(windowClone, parentActor) {
         let tracker = Shell.WindowTracker.get_default();
-        let apps = tracker.get_running_apps('');
-        
-        this._applicationIconBox = new St.Bin({ style_class: 'windowoverlay-application-icon-box' });
-        
-        let icon = null;
-        for (let i = 0; i < apps.length; i++) {
-            let windows = apps[i].get_windows();
-            for (let j = 0; j < windows.length; j++) {
-                if (windows[j] == windowClone.metaWindow) {
-                    icon = apps[i].create_icon_texture(WINDOWOVERLAY_ICON_SIZE);
-                    icon.style_class = 'windowoverlay-application-icon';
-                }
-            }
-        }
+        let app = tracker.get_window_app(windowClone.metaWindow);
+        let icon = app.create_icon_texture(WINDOWOVERLAY_ICON_SIZE)
+        icon.style_class = 'windowoverlay-application-icon';
+
         if (icon === undefined) {
             icon = new St.Icon({ icon_name: 'applications-other',
                                  icon_type: St.IconType.FULLCOLOR,
@@ -45,6 +35,7 @@ function main() {
                                  style_class: 'windowoverlay-application-icon' });
         }
         
+        this._applicationIconBox = new St.Bin({ style_class: 'windowoverlay-application-icon-box' });
         this._applicationIconBox.set_opacity(200);
         this._applicationIconBox.add_actor(icon);
         
