@@ -18,11 +18,28 @@ function injectToFunction(parent, name, func) {
                 ret = func.apply(this, arguments);
         return ret;
     }
+    return origin;
 }
 
-function main() {
+let wsWinOverInjections, createdActors;
 
-    injectToFunction(Workspace.WindowOverlay.prototype, '_init', function(windowClone, parentActor) {
+function resetState() {
+    wsWinOverInjections = { };
+    createdActors = [ ];
+}
+
+function enable() {
+    resetState();
+    
+    wsWinOverInjections['_init'] = undefined;
+    wsWinOverInjections['hide'] = undefined;
+    wsWinOverInjections['show'] = undefined;
+    wsWinOverInjections['_onEnter'] = undefined;
+    wsWinOverInjections['_onLeave'] = undefined;
+    wsWinOverInjections['updatePositions'] = undefined;
+    wsWinOverInjections['_onDestroy'] = undefined;
+    
+    wsWinOverInjections['_init'] = injectToFunction(Workspace.WindowOverlay.prototype, '_init', function(windowClone, parentActor) {
         let icon = null;
         
         let tracker = Shell.WindowTracker.get_default();
@@ -43,28 +60,30 @@ function main() {
         this._applicationIconBox.set_opacity(200);
         this._applicationIconBox.add_actor(icon);
         
+        createdActors.push(this._applicationIconBox);
         parentActor.add_actor(this._applicationIconBox);
     });
     
-    injectToFunction(Workspace.WindowOverlay.prototype, 'hide', function() {
+    wsWinOverInjections['hide'] = injectToFunction(Workspace.WindowOverlay.prototype, 'hide', function() {
         this._applicationIconBox.hide();
     });
-    injectToFunction(Workspace.WindowOverlay.prototype, 'show', function() {
+    
+    wsWinOverInjections['show'] = injectToFunction(Workspace.WindowOverlay.prototype, 'show', function() {
         this._applicationIconBox.show();
     });
     
-    injectToFunction(Workspace.WindowOverlay.prototype, '_onEnter', function() {
+    wsWinOverInjections['_onEnter'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onEnter', function() {
         Tweener.addTween(this._applicationIconBox, { time: 0.2,
                                                      opacity: 50,
                                                      transition: 'linear' });
     });
-    injectToFunction(Workspace.WindowOverlay.prototype, '_onLeave', function() {
+    wsWinOverInjections['_onLeave'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onLeave', function() {
         Tweener.addTween(this._applicationIconBox, { time: 0.2,
                                                      opacity: 200,
                                                      transition: 'linear' });
     });
     
-    injectToFunction(Workspace.WindowOverlay.prototype, 'updatePositions', function(cloneX, cloneY, cloneWidth, cloneHeight) {
+    wsWinOverInjections['updatePositions'] = injectToFunction(Workspace.WindowOverlay.prototype, 'updatePositions', function(cloneX, cloneY, cloneWidth, cloneHeight) {
         let icon = this._applicationIconBox;
         
         let iconX = cloneX + cloneWidth - icon.width - 3;
@@ -73,8 +92,28 @@ function main() {
         icon.set_position(Math.floor(iconX), Math.floor(iconY));
     });
     
-    injectToFunction(Workspace.WindowOverlay.prototype, '_onDestroy', function() {
+    wsWinOverInjections['_onDestroy'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onDestroy', function() {
         this._applicationIconBox.destroy();
     });
 
+}
+
+function removeInjection(object, injection, name) {
+    if (injection[name] === undefined)
+        delete object[name];
+    else
+        object[name] = injection[name];
+}
+
+function disable() {
+    for (i in wsWinOverInjections) {
+        removeInjection(Workspace.WindowOverlay.prototype, wsWinOverInjections, i);
+    }
+    for each (i in createdActors)
+        i.destroy();
+    resetState();
+}
+
+function init() {
+    /* do nothing */
 }
