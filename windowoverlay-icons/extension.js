@@ -117,3 +117,9 @@ function disable() {
 function init() {
     /* do nothing */
 }
+
+/* 3.0 API backward compatibility */
+function main() {
+    init();
+    enable();
+} 
