@@ -99,13 +99,16 @@ function enable() {
                                                      transition: 'linear' });
     });
     
-    wsWinOverInjections['updatePositions'] = injectToFunction(Workspace.WindowOverlay.prototype, 'updatePositions', function(cloneX, cloneY, cloneWidth, cloneHeight) {
+    wsWinOverInjections['updatePositions'] = injectToFunction(Workspace.WindowOverlay.prototype, 'updatePositions', function(cloneX, cloneY, cloneWidth, cloneHeight, animate) {
         let icon = this._applicationIconBox;
         
         let iconX = cloneX + cloneWidth - icon.width - 3;
         let iconY = cloneY + cloneHeight - icon.height - 3;
         
-        icon.set_position(Math.floor(iconX), Math.floor(iconY));
+        if (animate)
+            this._animateOverlayActor(icon, Math.floor(iconX), Math.floor(iconY), icon.width);
+        else
+            icon.set_position(Math.floor(iconX), Math.floor(iconY));
     });
     
     wsWinOverInjections['_onDestroy'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onDestroy', function() {
