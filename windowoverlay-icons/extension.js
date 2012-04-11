@@ -89,12 +89,12 @@ function enable() {
     });
     
     wsWinOverInjections['_onEnter'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onEnter', function() {
-        Tweener.addTween(this._applicationIconBox, { time: 0.2,
+        Tweener.addTween(this._applicationIconBox, { time: Overview.ANIMATION_TIME,
                                                      opacity: 50,
                                                      transition: 'linear' });
     });
     wsWinOverInjections['_onLeave'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onLeave', function() {
-        Tweener.addTween(this._applicationIconBox, { time: 0.2,
+        Tweener.addTween(this._applicationIconBox, { time: Overview.ANIMATION_TIME,
                                                      opacity: 200,
                                                      transition: 'linear' });
     });
