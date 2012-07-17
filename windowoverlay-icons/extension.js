@@ -75,6 +75,7 @@ function enable() {
         this._applicationIconBox = new St.Bin({ style_class: 'windowoverlay-application-icon-box' });
         this._applicationIconBox.set_opacity(200);
         this._applicationIconBox.add_actor(icon);
+        Shell.util_set_hidden_from_pick(this._applicationIconBox, true);
         
         createdActors.push(this._applicationIconBox);
         parentActor.add_actor(this._applicationIconBox);
