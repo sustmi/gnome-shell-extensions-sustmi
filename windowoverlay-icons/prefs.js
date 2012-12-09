@@ -71,14 +71,11 @@ const WindowOverlayIcosExtensionPrefsWidget = new GObject.Class({
         }
         
         this._mainGrid = builder.get_object('main_grid');
-        
-        this._action1 = builder.get_object('action1');
+        this._icon_alignment = builder.get_object('icon_alignment');
         this._icon_size = builder.get_object('icon_size');
         this._icon_size_relative = builder.get_object('icon_size_relative');
         
         this._background_color = builder.get_object('background_color');
-        
-        this._label1 = builder.get_object('label1');
         
         this._fillData(builder);
         this._connectSignals(builder);
@@ -89,7 +86,7 @@ const WindowOverlayIcosExtensionPrefsWidget = new GObject.Class({
     _fillData: function(builder) {
         let h = this._settings.get_enum('icon-horizontal-alignment');
         let v = this._settings.get_enum('icon-vertical-alignment');
-        this._action1.current_value = 3 * (v - 1) + h;
+        this._icon_alignment.current_value = 3 * (v - 1) + h;
         
         this._icon_size.value = this._settings.get_int('icon-size');
         this._icon_size_relative.active = this._settings.get_boolean('icon-size-relative');
@@ -102,7 +99,7 @@ const WindowOverlayIcosExtensionPrefsWidget = new GObject.Class({
     },
     
     _connectSignals: function(builder) {
-        this._action1.connect('changed', Lang.bind(this, function(action, current) {
+        this._icon_alignment.connect('changed', Lang.bind(this, function(action, current) {
             let h, v;
             switch (current.value) {
                 case Alignment.TOP_LEFT:

@@ -3,5 +3,6 @@
     "uuid": "windowoverlay-icons@sustmidown.centrum.cz",
     "name": "WindowOverlay Icons",
     "description": "Add application icons to window overview",
-    "url": "https://github.com/sustmi/gnome-shell-extensions-sustmi/tree/master/windowoverlay-icons"
+    "url": "https://github.com/sustmi/gnome-shell-extensions-sustmi/tree/master/windowoverlay-icons",
+    "settings-schema": "org.gnome.shell.extensions.windowoverlay-icons"
 }

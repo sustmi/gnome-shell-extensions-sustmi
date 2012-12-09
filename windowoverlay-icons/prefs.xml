@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
-  <object class="GtkActionGroup" id="icon_alignment">
+  <object class="GtkActionGroup" id="actiongroup1">
     <child>
-      <object class="GtkRadioAction" id="action1">
+      <object class="GtkRadioAction" id="icon_alignment">
         <property name="draw_as_radio">True</property>
         <property name="active">True</property>
         <property name="value">1</property>
@@ -14,7 +14,7 @@
       <object class="GtkRadioAction" id="action2">
         <property name="draw_as_radio">True</property>
         <property name="value">2</property>
-        <property name="group">action1</property>
+        <property name="group">icon_alignment</property>
         <property name="current_value">2</property>
       </object>
     </child>
@@ -22,7 +22,7 @@
       <object class="GtkRadioAction" id="action3">
         <property name="draw_as_radio">True</property>
         <property name="value">3</property>
-        <property name="group">action1</property>
+        <property name="group">icon_alignment</property>
         <property name="current_value">3</property>
       </object>
     </child>
@@ -30,42 +30,42 @@
       <object class="GtkRadioAction" id="action4">
         <property name="draw_as_radio">True</property>
         <property name="value">4</property>
-        <property name="group">action1</property>
+        <property name="group">icon_alignment</property>
       </object>
     </child>
     <child>
       <object class="GtkRadioAction" id="action5">
         <property name="draw_as_radio">True</property>
         <property name="value">5</property>
-        <property name="group">action1</property>
+        <property name="group">icon_alignment</property>
       </object>
     </child>
     <child>
       <object class="GtkRadioAction" id="action6">
         <property name="draw_as_radio">True</property>
         <property name="value">6</property>
-        <property name="group">action1</property>
+        <property name="group">icon_alignment</property>
       </object>
     </child>
     <child>
       <object class="GtkRadioAction" id="action7">
         <property name="draw_as_radio">True</property>
         <property name="value">7</property>
-        <property name="group">action1</property>
+        <property name="group">icon_alignment</property>
       </object>
     </child>
     <child>
       <object class="GtkRadioAction" id="action8">
         <property name="draw_as_radio">True</property>
         <property name="value">8</property>
-        <property name="group">action1</property>
+        <property name="group">icon_alignment</property>
       </object>
     </child>
     <child>
       <object class="GtkRadioAction" id="action9">
         <property name="draw_as_radio">True</property>
         <property name="value">9</property>
-        <property name="group">action1</property>
+        <property name="group">icon_alignment</property>
       </object>
     </child>
   </object>
@@ -180,7 +180,7 @@
         <property name="can_focus">False</property>
         <child>
           <object class="GtkRadioButton" id="radiobutton1">
-            <property name="related_action">action1</property>
+            <property name="related_action">icon_alignment</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
