@@ -17,6 +17,7 @@
 const Mainloop = imports.mainloop;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
+const Config = imports.misc.config;
 
 const Main = imports.ui.main;
 const Tweener = imports.tweener.tweener;
@@ -24,6 +25,8 @@ const Workspace = imports.ui.workspace;
 
 
 const WINDOWOVERLAY_ICON_SIZE = 32;
+
+let shell_Version = Config.PACKAGE_VERSION;
 
 function injectToFunction(parent, name, func) {
     let origin = parent[name];
@@ -66,12 +69,10 @@ function enable() {
         }
         if (!icon) {
             icon = new St.Icon({ icon_name: 'applications-other',
-                                 icon_type: St.IconType.FULLCOLOR,
                                  icon_size: WINDOWOVERLAY_ICON_SIZE });
         }
         icon.width = WINDOWOVERLAY_ICON_SIZE;
         icon.height = WINDOWOVERLAY_ICON_SIZE;
-        
         this._applicationIconBox = new St.Bin({ style_class: 'windowoverlay-application-icon-box' });
         this._applicationIconBox.set_opacity(200);
         this._applicationIconBox.add_actor(icon);
@@ -89,7 +90,7 @@ function enable() {
     });
     
     wsWinOverInjections['_onEnter'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onEnter', function() {
-        Tweener.addTween(this._applicationIconBox, { time: 0.2,
+        Tweener.addTween(this._applicationIconBox, { time: Workspace.CLOSE_BUTTON_FADE_TIME,
                                                      opacity: 50,
                                                      transition: 'linear' });
     });
@@ -98,19 +99,30 @@ function enable() {
                                                      opacity: 200,
                                                      transition: 'linear' });
     });
-    
-    wsWinOverInjections['updatePositions'] = injectToFunction(Workspace.WindowOverlay.prototype, 'updatePositions', function(cloneX, cloneY, cloneWidth, cloneHeight, animate) {
-        let icon = this._applicationIconBox;
+    if (shell_Version < "3.7.3"){
+        wsWinOverInjections['updatePositions'] = injectToFunction(Workspace.WindowOverlay.prototype, 'updatePositions', function(cloneX, cloneY, cloneWidth, cloneHeight, animate) {
+            let icon = this._applicationIconBox;
         
-        let iconX = cloneX + cloneWidth - icon.width - 3;
-        let iconY = cloneY + cloneHeight - icon.height - 3;
+            let iconX = cloneX + cloneWidth - icon.width - 3;
+            let iconY = cloneY + cloneHeight - icon.height - 3;
+            if (animate)
+                this._animateOverlayActor(icon, Math.floor(iconX), Math.floor(iconY), icon.width);
+            else
+                icon.set_position(Math.floor(iconX), Math.floor(iconY));
+        });
+    } else {
+        wsWinOverInjections['updatePositions'] = injectToFunction(Workspace.WindowOverlay.prototype, 'relayout', function(animate) {
+            let [cloneX, cloneY, cloneWidth, cloneHeight] = this._windowClone.slot;
+            let icon = this._applicationIconBox;
         
-        if (animate)
-            this._animateOverlayActor(icon, Math.floor(iconX), Math.floor(iconY), icon.width);
-        else
-            icon.set_position(Math.floor(iconX), Math.floor(iconY));
-    });
-    
+            let iconX = cloneX + cloneWidth - icon.width - 3;
+            let iconY = cloneY + cloneHeight - icon.height - 3;
+            if (animate)
+                this._animateOverlayActor(icon, Math.floor(iconX), Math.floor(iconY), icon.width);
+            else
+                icon.set_position(Math.floor(iconX), Math.floor(iconY));
+        });
+    }
     wsWinOverInjections['_onDestroy'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onDestroy', function() {
         this._applicationIconBox.destroy();
     });
