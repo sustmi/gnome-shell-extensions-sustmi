@@ -20,6 +20,7 @@ const St = imports.gi.St;
 const Gdk = imports.gi.Gdk;
 const Clutter = imports.gi.Clutter;
 
+const Config = imports.misc.config;
 const Main = imports.ui.main;
 const Tweener = imports.tweener.tweener;
 const Workspace = imports.ui.workspace;
@@ -73,6 +74,7 @@ function enable() {
     wsWinOverInjections['_onEnter'] = undefined;
     wsWinOverInjections['_onLeave'] = undefined;
     wsWinOverInjections['updatePositions'] = undefined;
+    wsWinOverInjections['relayout'] = undefined;
     wsWinOverInjections['_onDestroy'] = undefined;
     
     wsWinOverInjections['_init'] = injectToFunction(Workspace.WindowOverlay.prototype, '_init', function(windowClone, parentActor) {
@@ -120,7 +122,7 @@ function enable() {
                                                                   transition: 'linear' });
     });
     
-    wsWinOverInjections['updatePositions'] = injectToFunction(Workspace.WindowOverlay.prototype, 'updatePositions', function(cloneX, cloneY, cloneWidth, cloneHeight, animate) {
+    updatePositions = function(cloneX, cloneY, cloneWidth, cloneHeight, animate) {
         let icon_size = settings.get_int('icon-size');
         let icon_size_relative = settings.get_boolean('icon-size-relative');
         
@@ -149,9 +151,17 @@ function enable() {
             }
             if (!this._windowOverlayIconsExtension.icon) {
                 // fallback to default icon
-                this._windowOverlayIconsExtension.icon = new St.Icon({ icon_name: 'applications-other',
-                                                                       icon_type: St.IconType.FULLCOLOR,
-                                                                       icon_size: icon_mipmap_size });
+                let texture_cache = St.TextureCache.get_default();
+                if (Config.PACKAGE_VERSION < '3.5.91') {
+                    this._windowOverlayIconsExtension.icon = texture_cache.load_icon_name(null,
+                                                                                          'application',
+                                                                                          St.IconType.FULLCOLOR,
+                                                                                          icon_mipmap_size);
+                } else {
+                    this._windowOverlayIconsExtension.icon = texture_cache.load_icon_name(null,
+                                                                                          'application',
+                                                                                          icon_mipmap_size);
+                }
             }
             
             this._windowOverlayIconsExtension.box.add_actor(this._windowOverlayIconsExtension.icon);
@@ -197,7 +207,16 @@ function enable() {
         } else {
             this._windowOverlayIconsExtension.box.set_position(Math.floor(iconX), Math.floor(iconY));
         }
-    });
+    };
+    
+    if (Config.PACKAGE_VERSION < '3.7.3') {
+        wsWinOverInjections['updatePositions'] = injectToFunction(Workspace.WindowOverlay.prototype, 'updatePositions', updatePositions);
+    } else {
+        wsWinOverInjections['relayout'] = injectToFunction(Workspace.WindowOverlay.prototype, 'relayout', function(animate) {
+            let [cloneX, cloneY, cloneWidth, cloneHeight] = this._windowClone.slot;
+            updatePositions.call(this, cloneX, cloneY, cloneWidth, cloneHeight, animate);
+        });
+    }
     
     wsWinOverInjections['_onDestroy'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onDestroy', function() {
         this._windowOverlayIconsExtension.box.destroy();
