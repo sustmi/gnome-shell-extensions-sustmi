@@ -78,11 +78,7 @@ function enable() {
     wsWinOverInjections['_onDestroy'] = undefined;
     
     wsWinOverInjections['_init'] = injectToFunction(Workspace.WindowOverlay.prototype, '_init', function(windowClone, parentActor) {
-        let tracker = Shell.WindowTracker.get_default();
-        
         this._windowOverlayIconsExtension = {};
-        
-        this._windowOverlayIconsExtension.app = tracker.get_window_app(windowClone.metaWindow);
         
         this._windowOverlayIconsExtension.box = new St.Bin({ style_class: 'windowoverlay-application-icon-box' });
         this._windowOverlayIconsExtension.box.set_opacity(settings.get_int('icon-opacity-blur'));
@@ -140,8 +136,22 @@ function enable() {
         // Always minify (use texture bigger than target box)
         let icon_mipmap_size = Math.pow(2, Math.ceil(icon_mipmap_level));
         
+        // WORKAROUND for bug: https://extensions.gnome.org/errors/view/1334
+        // > If, in overview, one moves a window to another desktop and then
+        // > pulls it back onto the active workspace (without leaving overview),
+        // > a blank icon is displayed.
+        // IDK why, but in this situation tracker.get_window_app() returns null.
+        let refreshIcon = false;
+        if (!this._windowOverlayIconsExtension.app) {
+            let tracker = Shell.WindowTracker.get_default();
+            this._windowOverlayIconsExtension.app = tracker.get_window_app(this._windowClone.metaWindow);
+            if (this._windowOverlayIconsExtension.app) {
+                refreshIcon = true;
+            }
+        }
+        
         // request new icon size
-        if (this._windowOverlayIconsExtension.mipmap_size != icon_mipmap_size) {
+        if (this._windowOverlayIconsExtension.mipmap_size != icon_mipmap_size || refreshIcon) {
             if (this._windowOverlayIconsExtension.icon) {
                 this._windowOverlayIconsExtension.box.remove_actor(this._windowOverlayIconsExtension.icon);
             }
