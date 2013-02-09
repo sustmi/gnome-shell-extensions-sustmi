@@ -118,7 +118,7 @@ function enable() {
                                                                   transition: 'linear' });
     });
     
-    updatePositions = function(cloneX, cloneY, cloneWidth, cloneHeight, animate) {
+    let updatePositions = function(cloneX, cloneY, cloneWidth, cloneHeight, animate) {
         let icon_size = settings.get_int('icon-size');
         let icon_size_relative = settings.get_boolean('icon-size-relative');
         

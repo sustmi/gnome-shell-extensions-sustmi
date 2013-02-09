@@ -71,7 +71,7 @@
   </object>
   <object class="GtkEntryCompletion" id="entrycompletion1"/>
   <object class="GtkAdjustment" id="icon_size">
-    <property name="upper">100</property>
+    <property name="upper">1000</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
