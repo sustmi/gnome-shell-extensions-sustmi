@@ -1,7 +1,8 @@
 const Gtk = imports.gi.Gtk;
 const Gdk = imports.gi.Gdk;
 const GObject = imports.gi.GObject;
-const Gettext = imports.gettext.domain('gnome-shell-extension');
+
+const Gettext = imports.gettext;
 const _ = Gettext.gettext;
 
 const Lang = imports.lang;
@@ -37,7 +38,7 @@ const VerticalAlignment = {
 };
 
 function init() {
-    
+    Convenience.initTranslations();
 }
 
 function getErrorLabel(message) {
@@ -62,6 +63,7 @@ const WindowOverlayIcosExtensionPrefsWidget = new GObject.Class({
         }
         
         let builder = new Gtk.Builder();
+        builder.set_translation_domain(Me.metadata['gettext-domain']);
         
         try {
             builder.add_from_file(PREFS_UI);
