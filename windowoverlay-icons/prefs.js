@@ -79,6 +79,9 @@ const WindowOverlayIcosExtensionPrefsWidget = new GObject.Class({
         
         this._background_color = builder.get_object('background_color');
         
+        this._icon_opacity_focus = builder.get_object('icon_opacity_focus');
+        this._icon_opacity_blur = builder.get_object('icon_opacity_blur');
+        
         this._fillData(builder);
         this._connectSignals(builder);
         
@@ -98,6 +101,9 @@ const WindowOverlayIcosExtensionPrefsWidget = new GObject.Class({
             this._background_color.color = background_color;
         }
         this._background_color.alpha = this._settings.get_int('background-alpha');
+        
+        this._icon_opacity_focus.value = this._settings.get_int('icon-opacity-focus');
+        this._icon_opacity_blur.value = this._settings.get_int('icon-opacity-blur');
     },
     
     _connectSignals: function(builder) {
@@ -157,6 +163,13 @@ const WindowOverlayIcosExtensionPrefsWidget = new GObject.Class({
         this._background_color.connect('color-set', Lang.bind(this, function(colorbutton) {
             this._settings.set_string('background-color', colorbutton.color.to_string());
             this._settings.set_int('background-alpha', colorbutton.alpha);
+        }));
+        
+        this._icon_opacity_focus.connect('value-changed', Lang.bind(this, function(spinbutton) {
+            this._settings.set_int('icon-opacity-focus', spinbutton.value);
+        }));
+        this._icon_opacity_blur.connect('value-changed', Lang.bind(this, function(spinbutton) {
+            this._settings.set_int('icon-opacity-blur', spinbutton.value);
         }));
     }
 });
