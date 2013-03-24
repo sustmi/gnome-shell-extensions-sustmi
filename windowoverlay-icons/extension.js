@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 const Shell = imports.gi.Shell;
 const St = imports.gi.St;
@@ -78,7 +77,7 @@ function enable() {
     wsWinOverInjections['relayout'] = undefined;
     wsWinOverInjections['_onDestroy'] = undefined;
     
-    wsWinOverInjections['_init'] = Lang.bind(this, injectToFunction(Workspace.WindowOverlay.prototype, '_init', function(windowClone, parentActor) {
+    wsWinOverInjections['_init'] = injectToFunction(Workspace.WindowOverlay.prototype, '_init', function(windowClone, parentActor) {
         this._windowOverlayIconsExtension = {};
         
         this._windowOverlayIconsExtension.box = new St.Bin({ style_class: 'windowoverlay-application-icon-box' });
@@ -97,27 +96,27 @@ function enable() {
         
         createdActors.push(this._windowOverlayIconsExtension.box);
         parentActor.add_actor(this._windowOverlayIconsExtension.box);
-    }));
+    });
     
-    wsWinOverInjections['hide'] = Lang.bind(this, injectToFunction(Workspace.WindowOverlay.prototype, 'hide', function() {
+    wsWinOverInjections['hide'] = injectToFunction(Workspace.WindowOverlay.prototype, 'hide', function() {
         this._windowOverlayIconsExtension.box.hide();
-    }));
+    });
     
-    wsWinOverInjections['show'] = Lang.bind(this, injectToFunction(Workspace.WindowOverlay.prototype, 'show', function() {
+    wsWinOverInjections['show'] = injectToFunction(Workspace.WindowOverlay.prototype, 'show', function() {
         this._windowOverlayIconsExtension.box.show();
-    }));
+    });
     
-    wsWinOverInjections['_onEnter'] = Lang.bind(this, injectToFunction(Workspace.WindowOverlay.prototype, '_onEnter', function() {
+    wsWinOverInjections['_onEnter'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onEnter', function() {
         Tweener.addTween(this._windowOverlayIconsExtension.box, { time: 0.2,
                                                                   opacity: settings.get_int('icon-opacity-focus'),
                                                                   transition: 'linear' });
         
-    }));
-    wsWinOverInjections['_onLeave'] = Lang.bind(this, injectToFunction(Workspace.WindowOverlay.prototype, '_onLeave', function() {
+    });
+    wsWinOverInjections['_onLeave'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onLeave', function() {
         Tweener.addTween(this._windowOverlayIconsExtension.box, { time: 0.2,
                                                                   opacity: settings.get_int('icon-opacity-blur'),
                                                                   transition: 'linear' });
-    }));
+    });
     
     let updatePositions = function(cloneX, cloneY, cloneWidth, cloneHeight, animate) {
         let icon_size = settings.get_int('icon-size');
@@ -221,17 +220,17 @@ function enable() {
     };
     
     if (Config.PACKAGE_VERSION < '3.7.3') {
-        wsWinOverInjections['updatePositions'] = Lang.bind(this, injectToFunction(Workspace.WindowOverlay.prototype, 'updatePositions', updatePositions));
+        wsWinOverInjections['updatePositions'] = injectToFunction(Workspace.WindowOverlay.prototype, 'updatePositions', updatePositions);
     } else {
-        wsWinOverInjections['relayout'] = Lang.bind(this, injectToFunction(Workspace.WindowOverlay.prototype, 'relayout', function(animate) {
+        wsWinOverInjections['relayout'] = injectToFunction(Workspace.WindowOverlay.prototype, 'relayout', function(animate) {
             let [cloneX, cloneY, cloneWidth, cloneHeight] = this._windowClone.slot;
             updatePositions.call(this, cloneX, cloneY, cloneWidth, cloneHeight, animate);
-        }));
+        });
     }
     
-    wsWinOverInjections['_onDestroy'] = Lang.bind(this, injectToFunction(Workspace.WindowOverlay.prototype, '_onDestroy', function() {
+    wsWinOverInjections['_onDestroy'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onDestroy', function() {
         this._windowOverlayIconsExtension.box.destroy();
-    }));
+    });
 
 }
 
