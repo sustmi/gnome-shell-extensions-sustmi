@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: windowoverlay-icons\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-03-24 18:38+0100\n"
-"PO-Revision-Date: 2013-03-24 18:43+0100\n"
-"Last-Translator: Miroslav Šustek <sustmidown@centrum.cz>\n"
+"PO-Revision-Date: 2013-05-21 11:47+0100\n"
+"Last-Translator: Jonatan Zeidler <jonatan_zeidler@hotmail.de>\n"
 "Language-Team: German <jonatan_zeidler@gmx.de>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
@@ -35,8 +35,8 @@ msgstr "Position:"
 
 #: ../prefs.xml:406
 msgid "Icon opacity - focus:"
-msgstr ""
+msgstr "Symboltransparenz - Fokus:"
 
 #: ../prefs.xml:423
 msgid "Icon opacity - blur:"
-msgstr ""
+msgstr "Symboltransparenz - Sonst:"
