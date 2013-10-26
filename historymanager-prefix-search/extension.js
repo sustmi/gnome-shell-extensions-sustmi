@@ -111,7 +111,7 @@ function enable() {
 }
 
 function disable() {
-    for (i in historyManagerInjections) {
+    for (let i in historyManagerInjections) {
         removeInjection(History.HistoryManager.prototype, historyManagerInjections, i);
     }
     resetState();

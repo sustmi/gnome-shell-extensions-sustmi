@@ -162,16 +162,9 @@ function enable() {
             if (!this._windowOverlayIconsExtension.icon) {
                 // fallback to default icon
                 let texture_cache = St.TextureCache.get_default();
-                if (Config.PACKAGE_VERSION < '3.5.91') {
-                    this._windowOverlayIconsExtension.icon = texture_cache.load_icon_name(null,
-                                                                                          'application',
-                                                                                          St.IconType.FULLCOLOR,
-                                                                                          icon_mipmap_size);
-                } else {
-                    this._windowOverlayIconsExtension.icon = texture_cache.load_icon_name(null,
-                                                                                          'application',
-                                                                                          icon_mipmap_size);
-                }
+								this._windowOverlayIconsExtension.icon = texture_cache.load_icon_name(null,
+																																											'application',
+																																											icon_mipmap_size);
             }
             
             this._windowOverlayIconsExtension.box.add_actor(this._windowOverlayIconsExtension.icon);
@@ -219,15 +212,11 @@ function enable() {
         }
     };
     
-    if (Config.PACKAGE_VERSION < '3.7.3') {
-        wsWinOverInjections['updatePositions'] = injectToFunction(Workspace.WindowOverlay.prototype, 'updatePositions', updatePositions);
-    } else {
-        wsWinOverInjections['relayout'] = injectToFunction(Workspace.WindowOverlay.prototype, 'relayout', function(animate) {
-            let [cloneX, cloneY, cloneWidth, cloneHeight] = this._windowClone.slot;
-            updatePositions.call(this, cloneX, cloneY, cloneWidth, cloneHeight, animate);
-        });
-    }
-    
+		wsWinOverInjections['relayout'] = injectToFunction(Workspace.WindowOverlay.prototype, 'relayout', function(animate) {
+				let [cloneX, cloneY, cloneWidth, cloneHeight] = this._windowClone.slot;
+				updatePositions.call(this, cloneX, cloneY, cloneWidth, cloneHeight, animate);
+		});
+
     wsWinOverInjections['_onDestroy'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onDestroy', function() {
         this._windowOverlayIconsExtension.box.destroy();
     });
@@ -242,10 +231,10 @@ function removeInjection(object, injection, name) {
 }
 
 function disable() {
-    for (i in wsWinOverInjections) {
+    for (let i in wsWinOverInjections) {
         removeInjection(Workspace.WindowOverlay.prototype, wsWinOverInjections, i);
     }
-    for each (i in createdActors)
+    for each (let i in createdActors)
         i.destroy();
     resetState();
 }
