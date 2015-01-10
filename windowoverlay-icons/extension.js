@@ -162,9 +162,9 @@ function enable() {
             if (!this._windowOverlayIconsExtension.icon) {
                 // fallback to default icon
                 let texture_cache = St.TextureCache.get_default();
-								this._windowOverlayIconsExtension.icon = texture_cache.load_icon_name(null,
-																																											'application',
-																																											icon_mipmap_size);
+                this._windowOverlayIconsExtension.icon = texture_cache.load_icon_name(null,
+                                                                                    	'application',
+                                                                                    	icon_mipmap_size);
             }
             
             this._windowOverlayIconsExtension.box.add_actor(this._windowOverlayIconsExtension.icon);
@@ -212,10 +212,10 @@ function enable() {
         }
     };
     
-		wsWinOverInjections['relayout'] = injectToFunction(Workspace.WindowOverlay.prototype, 'relayout', function(animate) {
-				let [cloneX, cloneY, cloneWidth, cloneHeight] = this._windowClone.slot;
-				updatePositions.call(this, cloneX, cloneY, cloneWidth, cloneHeight, animate);
-		});
+    wsWinOverInjections['relayout'] = injectToFunction(Workspace.WindowOverlay.prototype, 'relayout', function(animate) {
+        let [cloneX, cloneY, cloneWidth, cloneHeight] = this._windowClone.slot;
+        updatePositions.call(this, cloneX, cloneY, cloneWidth, cloneHeight, animate);
+    });
 
     wsWinOverInjections['_onDestroy'] = injectToFunction(Workspace.WindowOverlay.prototype, '_onDestroy', function() {
         this._windowOverlayIconsExtension.box.destroy();
