@@ -1,5 +1,5 @@
 {
-    "shell-version": ["3.0", "3.2", "3.4", "3.5", "3.6", "3.7", "3.7.3", "3.8", "3.10", "3.12", "3.14"],
+    "shell-version": ["3.0", "3.2", "3.4", "3.5", "3.6", "3.7", "3.7.3", "3.8", "3.10", "3.12", "3.14", "3.16"],
     "uuid": "historymanager-prefix-search@sustmidown.centrum.cz",
     "name": "HistoryManager Prefix Search",
     "description": "Use PageUp and PageDown to move in HistoryManager (eg. RunCommand, Looking Glass) according to prefix",
