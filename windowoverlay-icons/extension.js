@@ -43,20 +43,7 @@ const VerticalAlignment = {
     BOTTOM: 3
 };
 
-function injectToFunction(parent, name, func) {
-    let origin = parent[name];
-    parent[name] = function() {
-        let ret;
-        ret = origin.apply(this, arguments);
-        if (ret === undefined) {
-            ret = func.apply(this, arguments);
-        }
-        return ret;
-    }
-    return origin;
-}
-
-let wsWinOverInjections
+let wsWinOverInjections;
 let createdActors;
 let settings;
 
@@ -119,8 +106,6 @@ function enable() {
     });
     
     let updatePositions = function(cloneX, cloneY, cloneWidth, cloneHeight, animate) {
-				global.log('updatePositions', new Date().getTime(), cloneX, cloneY, cloneWidth, cloneHeight, animate);
-			
         let icon_size = settings.get_int('icon-size');
         let icon_size_relative = settings.get_boolean('icon-size-relative');
         
@@ -224,11 +209,30 @@ function enable() {
 
 }
 
-function removeInjection(object, injection, name) {
-    if (injection[name] === undefined) {
-        delete object[name];
+function injectToFunction(objectPrototype, functionName, injectedFunction) {
+    let originalFunction = objectPrototype[functionName];
+
+    objectPrototype[functionName] = function() {
+        let returnValue;
+
+        let originalReturnValue = originalFunction.apply(this, arguments);
+        returnValue = injectedFunction.apply(this, arguments);
+
+        if (returnValue === undefined) {
+            returnValue = originalReturnValue;
+        }
+
+        return returnValue;
+    }
+
+    return originalFunction;
+}
+
+function removeInjection(objectPrototype, injection, functionName) {
+    if (injection[functionName] === undefined) {
+        delete objectPrototype[functionName];
     } else {
-        object[name] = injection[name];
+        objectPrototype[functionName] = injection[functionName];
     }
 }
 
