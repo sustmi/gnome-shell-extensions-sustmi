@@ -19,7 +19,6 @@ const Clutter = imports.gi.Clutter;
 const History = imports.misc.history;
 const Main = imports.ui.main;
 
-
 function injectToFunction(parent, name, func) {
     let origin = parent[name];
     parent[name] = function() {
@@ -126,4 +125,3 @@ function main() {
     init();
     enable();
 }
-
