@@ -95,11 +95,13 @@ function injectToFunction(objectPrototype, functionName, injectedFunction) {
     objectPrototype[functionName] = function() {
         let returnValue;
 
-        let originalReturnValue = originalFunction.apply(this, arguments);
-        returnValue = injectedFunction.apply(this, arguments);
+        if (originalFunction !== undefined) {
+        	returnValue = originalFunction.apply(this, arguments);
+        }
 
+        let injectedReturnValue = injectedFunction.apply(this, arguments);
         if (returnValue === undefined) {
-            returnValue = originalReturnValue;
+            returnValue = injectedReturnValue;
         }
 
         return returnValue;
