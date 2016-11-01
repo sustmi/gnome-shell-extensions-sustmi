@@ -1,7 +1,0 @@
-windowoverlay-icons
-- adds application icons to the windows overview (in Activities menu)
-
-historymanager-prefix-search
-- use PageUp and PageDown to move in history of eg. RunCommand (Alt+F2) or Looking Glass according the command prefix
-- works with all components which uses imports.misc.history.HistoryManager
-
