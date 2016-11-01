@@ -1,4 +1,4 @@
-Two extensions for Gnome Shell that I built to enhance its User Experience.
+Two extensions for Gnome Shell that I created to enhance its user experience.
 
 ## WindowOverlay Icons extension
 Adds application icons to the windows overview (in Activities menu)
